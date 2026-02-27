@@ -1,84 +1,60 @@
-# 🛡️ SIRMOT — Sistema de Registro de Motos Robadas
+🛡️ SIRMOT — Sistema de Registro de Motos Robadas
 
-> Proyecto universitario — Universidad de Remington  
-> Aplicación web desarrollada con **Spring Boot** y **Thymeleaf** para el registro, consulta y gestión del estado de motos robadas, usando un **Árbol Binario de Búsqueda (ABB)** como estructura de datos principal.
+Proyecto universitario — Universidad de Remington
+Aplicación web desarrollada con Spring Boot y Thymeleaf para el registro, consulta y gestión del estado de motos robadas, usando un Árbol Binario de Búsqueda (ABB) como estructura de datos principal.
 
----
 
-## Tabla de Contenidos
+Tabla de Contenidos
 
-1. [Descripción General](#descripción-general)
-2. [Tecnologías Utilizadas](#tecnologías-utilizadas)
-3. [Requisitos Previos](#requisitos-previos)
-4. [Instalación y Ejecución](#instalación-y-ejecución)
-5. [Estructura del Proyecto](#estructura-del-proyecto)
-6. [Arquitectura](#arquitectura)
-7. [Modelos](#modelos)
-8. [Servicios](#servicios)
-9. [Controladores](#controladores)
-10. [Vistas](#vistas)
-11. [Endpoints / Rutas](#endpoints--rutas)
-12. [Funcionalidades](#funcionalidades)
-13. [Flujo de la Aplicación](#flujo-de-la-aplicación)
-14. [Configuración](#configuración)
-15. [Guía de Commits](#guía-de-commits)
+Descripción General
+Tecnologías Utilizadas
+Requisitos Previos
+Instalación y Ejecución
+Estructura del Proyecto
+Arquitectura
+Modelos
+Servicios
+Controladores
+Vistas
+Endpoints / Rutas
+Funcionalidades
+Flujo de la Aplicación
+Configuración
+Guía de Commits
 
----
 
-## 🌐 Descripción General
-
-**SIRMOT** es un sistema web de tipo MVC orientado al sector de seguridad, que permite a agentes registrar y consultar el estado de motos en una base de datos gestionada mediante un Árbol Binario de Búsqueda. La búsqueda por placa tiene una complejidad de **O(log n)**, lo que permite respuestas rápidas incluso con grandes volúmenes de registros.
-
+🌐 Descripción General
+SIRMOT es un sistema web de tipo MVC orientado al sector de seguridad, que permite a agentes registrar y consultar el estado de motos en una base de datos gestionada mediante un Árbol Binario de Búsqueda. La búsqueda por placa tiene una complejidad de O(log n), lo que permite respuestas rápidas incluso con grandes volúmenes de registros.
 Las principales acciones del sistema son:
 
-- Registrar motos con información completa del vehículo y propietario.
-- Consultar si una placa figura en el sistema y en qué estado se encuentra.
-- Marcar motos como **robadas** o **recuperadas** directamente desde la interfaz.
-- Eliminar registros del árbol cuando ya no son necesarios.
-- Visualizar estadísticas globales del sistema en tiempo real.
-- Ver una ficha detallada de cada moto registrada.
+Registrar motos con información completa del vehículo y propietario.
+Consultar si una placa figura en el sistema y en qué estado se encuentra.
+Marcar motos como robadas o recuperadas directamente desde la interfaz.
+Eliminar registros del árbol cuando ya no son necesarios.
+Visualizar estadísticas globales del sistema en tiempo real.
+Ver una ficha detallada de cada moto registrada.
 
-> ⚠️ **Nota:** Los datos se almacenan en memoria (estructura ABB en tiempo de ejecución). Al reiniciar la aplicación, todos los registros se pierden. No se utiliza base de datos persistente.
 
----
+⚠️ Nota: Los datos se almacenan en memoria (estructura ABB en tiempo de ejecución). Al reiniciar la aplicación, todos los registros se pierden. No se utiliza base de datos persistente.
 
-## 🔧 Tecnologías Utilizadas
 
-| Tecnología | Versión | Descripción |
-|---|---|---|
-| Java | 23 | Lenguaje de programación principal |
-| Spring Boot | 3.4.2 | Framework backend MVC |
-| Spring Web | — | Módulo para controladores y manejo de rutas HTTP |
-| Spring Actuator | — | Monitoreo y métricas de la aplicación |
-| Thymeleaf | — | Motor de plantillas HTML del lado del servidor |
-| Spring Boot DevTools | — | Recarga automática en desarrollo |
-| Bootstrap | 5.3 | Framework CSS para diseño responsivo |
-| Bootstrap Icons | 1.11 | Iconografía del sistema |
-| Maven | — | Gestor de dependencias y construcción del proyecto |
+🔧 Tecnologías Utilizadas
+TecnologíaVersiónDescripciónJava23Lenguaje de programación principalSpring Boot3.4.2Framework backend MVCSpring Web—Módulo para controladores y manejo de rutas HTTPSpring Actuator—Monitoreo y métricas de la aplicaciónThymeleaf—Motor de plantillas HTML del lado del servidorSpring Boot DevTools—Recarga automática en desarrolloBootstrap5.3Framework CSS para diseño responsivoBootstrap Icons1.11Iconografía del sistemaPlus Jakarta Sans—Tipografía principal cargada desde Google FontsMaven—Gestor de dependencias y construcción del proyecto
 
----
+✅ Requisitos Previos
 
-## ✅ Requisitos Previos
+Java JDK 23 o superior instalado
+Apache Maven 3.8+ (o usar el wrapper mvnw incluido en el proyecto)
+Un navegador web moderno (Chrome, Firefox, Edge)
+Conexión a internet para cargar Google Fonts, Bootstrap y Bootstrap Icons desde CDN
 
-- Java JDK **23** o superior instalado
-- Apache Maven **3.8+** (o usar el wrapper `mvnw` incluido en el proyecto)
-- Un navegador web moderno (Chrome, Firefox, Edge)
 
----
-
-## 🚀 Instalación y Ejecución
-
-### 1. Clonar el repositorio
-
-```bash
-git clone <url-del-repositorio>
-cd sirmot
-```
-
-### 2. Compilar el proyecto
-
-```bash
-# Con Maven instalado globalmente
+🚀 Instalación y Ejecución
+1. Clonar el repositorio
+bashgit clone <url-del-repositorio>
+cd MotoMejorado
+2. Compilar el proyecto
+bash# Con Maven instalado globalmente
 mvn clean install
 
 # Con el wrapper incluido (Linux / Mac)
@@ -86,12 +62,8 @@ mvn clean install
 
 # Con el wrapper incluido (Windows)
 .\mvnw.cmd clean install
-```
-
-### 3. Ejecutar la aplicación
-
-```bash
-# Con Maven
+3. Ejecutar la aplicación
+bash# Con Maven
 mvn spring-boot:run
 
 # Con el wrapper (Linux / Mac)
@@ -110,9 +82,8 @@ Abrir el navegador en: **http://localhost:8080/motos**
 ---
 
 ## 📁 Estructura del Proyecto
-
 ```
-sirmot/
+MotoMejorado/
 ├── pom.xml                                  # Configuración Maven y dependencias
 ├── mvnw / mvnw.cmd                          # Maven Wrapper
 ├── README.md                                # Este archivo
@@ -149,11 +120,10 @@ sirmot/
 ## 🏗️ Arquitectura
 
 La aplicación sigue el patrón **MVC (Modelo - Vista - Controlador)** de Spring Boot, con una capa de estructura de datos personalizada (ABB) que reemplaza el uso de colecciones estándar:
-
 ```
 ┌──────────────────────────────────────────────────────────┐
 │                  NAVEGADOR (Cliente)                     │
-│           Bootstrap 5 + Thymeleaf + Bootstrap Icons      │
+│     Bootstrap 5 + Thymeleaf + Plus Jakarta Sans          │
 └───────────────────────┬──────────────────────────────────┘
                         │ Peticiones HTTP
                         ▼
@@ -274,21 +244,25 @@ Capa de lógica de negocio. Delega las operaciones estructurales a `ArbolABB` y 
 
 ## 🖥️ Vistas
 
-Todas las plantillas utilizan **Thymeleaf** como motor de renderizado del lado del servidor y **Bootstrap 5** para el diseño responsivo. El estilo visual sigue una temática policial con fondo oscuro azul y detalles dorados.
+Todas las plantillas utilizan **Thymeleaf** como motor de renderizado del lado del servidor y **Bootstrap 5** para el diseño responsivo. El estilo visual sigue una estética moderna tipo **glassmorphism** con fondo degradado en tonos morado–azul–celeste, sidebar translúcido fijo de 230px, tarjetas con efecto de cristal y tipografía **Plus Jakarta Sans** importada desde Google Fonts.
 
 | Template | Descripción | Características destacadas |
 |---|---|---|
-| `index.html` | Página principal del sistema | Navbar sticky, tarjetas de estadísticas en tiempo real, formulario completo de registro, sección de búsqueda con resultado visual diferenciado por estado |
-| `lista-motos.html` | Tabla de todos los registros | Barra de filtros por estado, filas coloreadas según estado, botones de acción por fila (marcar robada, recuperada, eliminar), contador de registros |
-| `detalle-moto.html` | Ficha individual de una moto | Cabecera con color según estado, animación de pulso en motos robadas, todos los datos del vehículo y propietario, botones de acción directos |
-| `estadisticas.html` | Panel de métricas globales | Números grandes por categoría, barras de progreso con porcentajes calculados, listado compacto de motos robadas activas |
+| `index.html` | Página principal del sistema | Sidebar fijo translúcido, 4 stat cards con íconos en degradado de color, formulario de registro con inputs glass, panel de búsqueda con resultado visual diferenciado por estado |
+| `lista-motos.html` | Tabla de todos los registros | Sidebar fijo, filtros tipo pill semitransparentes con backdrop-filter, tabla glass con borde de color por estado en cada fila, placa en badge morado, botones de acción compactos de 30×30px |
+| `detalle-moto.html` | Ficha individual de una moto | Banner superior en pastel que cambia según el estado, placa en tipografía monoespaciada grande con letter-spacing, banner de alerta con animación de pulso si está robada, botones de acción con colores diferenciados |
+| `estadisticas.html` | Panel de métricas globales | 4 stat cards grandes con íconos degradado, barras de progreso con gradientes de color por categoría, barra extra de tasa de recuperación, listado scrollable de motos robadas activas con efecto hover |
 
-**Diseño UI:**
-- Fondo oscuro azul policial (`#0d1b2a`) con acentos dorados (`#f0a500`).
-- Navbar sticky con bordes dorados y efecto de gradiente.
-- Tarjetas glassmorphism con `backdrop-filter` para los formularios.
-- Indicadores de estado con codificación de color: rojo (robada), verde (normal), naranja (recuperada).
-- Animación de pulso (`@keyframes`) en registros de motos robadas para destacar la alerta.
+**Diseño UI — Glassmorphism:**
+- Fondo: gradiente `#e8d5ff → #c9d8ff → #b8eaff → #d4f0ff` con dos blobs de color difuminados en las esquinas usando `filter: blur(80px)`.
+- Sidebar fijo de 230px con `background: rgba(255,255,255,0.35)`, `backdrop-filter: blur(24px)` y borde `rgba(255,255,255,0.7)`.
+- Tarjetas con `background: rgba(255,255,255,0.45)`, `backdrop-filter: blur(20px)` y `border: 1px solid rgba(255,255,255,0.7)`.
+- Logo del sidebar con gradiente `#7B5CE7 → #E879C8` aplicado al texto mediante `-webkit-background-clip: text`.
+- Stat cards con íconos en gradientes: morado (`#a78bfa → #7B5CE7`), rosa (`#f472b6 → #E879C8`), verde (`#34d399 → #10b981`), azul (`#60a5fa → #38bdf8`).
+- Botón principal de registro con gradiente `#7B5CE7 → #E879C8` y sombra de color ampliada al hacer hover.
+- Codificación de color por estado: rojo semitransparente (robada), verde (normal), ámbar (recuperada).
+- Animación `@keyframes pulse-r` en registros de motos robadas para destacar visualmente la alerta.
+- Diseño responsive: el sidebar se oculta automáticamente en pantallas menores a 768px.
 - Conversión automática de placa a mayúsculas desde el frontend con JavaScript.
 
 ---
@@ -314,35 +288,35 @@ Todas las plantillas utilizan **Thymeleaf** como motor de renderizado del lado d
 ## ✨ Funcionalidades
 
 ### 1. Registro de Motos
-Formulario completo con campos: placa, marca, modelo, color, año, propietario, cédula, estado y descripción. La placa se convierte a mayúsculas automáticamente. El estado inicial puede ser `normal` o `robada` desde el momento del registro. La fecha de reporte se asigna automáticamente.
+Formulario completo con campos: placa, marca, modelo, color, año, propietario, cédula, estado y descripción. Los inputs tienen fondo semitransparente con borde glass y glow morado al hacer foco. La placa se convierte a mayúsculas automáticamente via JavaScript. El estado inicial puede ser `normal` o `robada` desde el momento del registro. La fecha de reporte se asigna automáticamente con `LocalDate.now()`.
 
 ### 2. Búsqueda por Placa
-Consulta eficiente O(log n) mediante el ABB. El resultado se muestra visualmente diferenciado: alerta roja con animación si la moto está robada, verde si está en estado normal, naranja si fue recuperada. Si la placa no existe en el sistema, se muestra un mensaje informativo.
+Consulta eficiente **O(log n)** mediante el ABB. El resultado se muestra en una tarjeta visual diferenciada: roja con animación de pulso si la moto está robada, verde si está en estado normal, ámbar si fue recuperada. Si la placa no existe en el sistema, se muestra un estado vacío con ícono circular.
 
 ### 3. Listado con Filtros
-Tabla completa de todos los registros ordenados alfabéticamente por placa (recorrido inorden del ABB). Permite filtrar por estado usando botones de acceso rápido. Cada fila tiene color de borde según el estado de la moto y botones de acción directos.
+Tabla glass con todos los registros ordenados alfabéticamente por placa (recorrido inorden del ABB). Los botones de filtro tienen estilo pill semitransparente con `backdrop-filter`. Cada fila tiene borde de color a la izquierda según el estado del vehículo. Las placas se muestran en un badge con fondo morado. Botones de acción compactos de 30×30px con color semántico por función.
 
 ### 4. Gestión de Estados
-Desde la tabla o desde la ficha de detalle, se puede cambiar el estado de una moto entre `normal`, `robada` y `recuperada`. Cada cambio redirige con un mensaje flash de confirmación o error.
+Desde la tabla o desde la ficha de detalle, se puede cambiar el estado de una moto entre `normal`, `robada` y `recuperada`. Cada cambio redirige con un mensaje flash visual diferenciado por color en la parte superior de la pantalla.
 
 ### 5. Eliminación de Registros
-Elimina el nodo correspondiente del árbol manejando correctamente los tres casos del algoritmo de eliminación en un ABB (hoja, un hijo, dos hijos con sucesor inorden).
+Elimina el nodo correspondiente del árbol manejando correctamente los tres casos del algoritmo de eliminación en un ABB: nodo hoja, nodo con un solo hijo, y nodo con dos hijos mediante el sucesor inorden.
 
 ### 6. Ficha de Detalle
-Vista individual que muestra toda la información de una moto en una tarjeta visual. El encabezado cambia de color y estilo según el estado actual. Si la moto está robada, se muestra un banner de alerta con animación de pulso.
+Vista individual con tarjeta glass que muestra toda la información del vehículo. El banner superior cambia de color pastel según el estado actual. La placa se muestra en tipografía monoespaciada grande con letter-spacing amplio. Si la moto está robada, aparece un banner de alerta rojo con animación de pulso y botón directo para marcarla como recuperada.
 
 ### 7. Panel de Estadísticas
-Muestra en tiempo real el total de registros y la distribución por estado. Incluye barras de progreso con porcentajes calculados dinámicamente y un listado compacto de todas las motos robadas activas.
+Muestra en tiempo real el total de registros y la distribución por estado en 4 stat cards con íconos en degradado. Incluye barras de progreso con gradientes de color y porcentajes calculados dinámicamente. Agrega una barra adicional de **Tasa de Recuperación** (recuperadas ÷ robadas × 100). Lista scrollable de motos robadas activas con efecto hover de deslizamiento lateral.
 
 ---
 
 ## 🔄 Flujo de la Aplicación
-
 ```
               ┌──────────────────────────────┐
               │   INICIO — /motos            │
               │   index.html                 │
-              │   Registro + Búsqueda rápida │
+              │   Sidebar + Stats + Registro │
+              │   + Búsqueda rápida          │
               └──────────────┬───────────────┘
                              │
           ┌──────────────────┼──────────────────┐
@@ -357,8 +331,8 @@ Muestra en tiempo real el total de registros y la distribución por estado. Incl
          │                                          │
          ▼                                ┌─────────┴──────────┐
   Vuelve a /motos                         │                    │
-  con mensaje                     POST /marcarRobada    POST /eliminar
-  de éxito                        POST /marcarRecuperada
+  con mensaje flash               POST /marcarRobada    POST /eliminar
+                                  POST /marcarRecuperada
                                           │
                                           ▼
                                    redirect /listar
@@ -367,7 +341,8 @@ Muestra en tiempo real el total de registros y la distribución por estado. Incl
                     ┌──────────────────────┐
                     │ GET /estadisticas    │
                     │                      │
-                    │ Métricas globales    │
+                    │ Métricas + barras    │
+                    │ Tasa recuperación    │
                     │ Lista de robadas     │
                     └──────────────────────┘
 
@@ -375,27 +350,19 @@ Muestra en tiempo real el total de registros y la distribución por estado. Incl
                     │ GET /detalle         │
                     │ ?placa=ABC123        │
                     │                      │
-                    │ Ficha individual     │
+                    │ Ficha glass          │
+                    │ Banner por estado    │
                     │ + acciones directas  │
                     └──────────────────────┘
-```
 
----
+📄 Configuración
+application.properties
+propertiesspring.application.name=Moto
 
-## 📄 Configuración
+El puerto por defecto de Spring Boot es 8080. Para cambiarlo, agregar: server.port=XXXX
 
-### `application.properties`
-
-```properties
-spring.application.name=Moto
-```
-
-> El puerto por defecto de Spring Boot es `8080`. Para cambiarlo, agregar: `server.port=XXXX`
-
-### `pom.xml` — Dependencias principales
-
-```xml
-<dependencies>
+pom.xml — Dependencias principales
+xml<dependencies>
     <!-- Motor de plantillas Thymeleaf -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -429,16 +396,10 @@ spring.application.name=Moto
         <scope>test</scope>
     </dependency>
 </dependencies>
-```
 
----
-
-## 📅 Guía de Commits
-
-### 👤 Programador 1 — Backend (5 commits)
-
-```bash
-# Commit 1 — Entidad principal
+📅 Guía de Commits
+👤 Programador 1 — Backend (5 commits)
+bash# Commit 1 — Entidad principal
 git add src/main/java/.../Model/Moto.java
 git commit -m "feat(model): definir entidad Moto con atributos placa, marca, color, anio, cedula, estado, fechaReporte y descripcion"
 
@@ -457,42 +418,28 @@ git commit -m "feat(service): implementar MotoService con marcarRobada, marcarRe
 # Commit 5 — Controlador HTTP
 git add src/main/java/.../controller/MotoController.java
 git commit -m "feat(controller): agregar endpoints registrar, buscar, listar, eliminar, marcarRobada, marcarRecuperada, estadisticas y detalle"
-```
-
-### 👤 Programador 2 — Frontend (5 commits)
-
-```bash
-# Commit 1 — Página principal
+👤 Programador 2 — Frontend (5 commits)
+bash# Commit 1 — Página principal
 git add src/main/resources/templates/index.html
-git commit -m "feat(view): rediseñar index.html con navbar, tarjetas de estadisticas, formulario completo y resultado de busqueda con alertas visuales"
+git commit -m "feat(view): implementar index.html con sidebar glass, stat cards con iconos degradado, formulario registro y busqueda con resultado visual por estado - closes #7"
 
 # Commit 2 — Listado de registros
 git add src/main/resources/templates/lista-motos.html
-git commit -m "feat(view): crear lista-motos.html con tabla de registros, filtros por estado, filas coloreadas y botones de accion por fila"
+git commit -m "feat(view): crear lista-motos.html con sidebar, tabla glass, filtros pill semitransparentes, filas con borde de color y botones accion compactos - closes #8"
 
 # Commit 3 — Ficha de detalle
 git add src/main/resources/templates/detalle-moto.html
-git commit -m "feat(view): implementar detalle-moto.html con ficha individual, encabezado dinamico por estado y animacion de alerta en motos robadas"
+git commit -m "feat(view): implementar detalle-moto.html con banner pastel por estado, placa monoespaciada grande y animacion de pulso en motos robadas - closes #9"
 
 # Commit 4 — Panel de estadísticas
 git add src/main/resources/templates/estadisticas.html
-git commit -m "feat(view): crear estadisticas.html con panel de metricas, barras de progreso y listado de motos robadas activas"
+git commit -m "feat(view): crear estadisticas.html con stat cards, barras de progreso degradado, tasa de recuperacion y lista scrollable de robadas activas - closes #10"
 
 # Commit 5 — Documentación
 git add README.md
-git commit -m "docs: agregar documentacion completa del proyecto con arquitectura, modelos, servicios, endpoints y guia de commits"
-```
+git commit -m "docs: actualizar README con arquitectura MVC, tecnologias, modelos, endpoints, diseno glassmorphism y guia de commits - closes #11"
 
----
+👥 Equipo
+RolResponsabilidadArchivosProgramador 1Backend — Estructura de datos y lógicaMoto.java, NodoABB.java, ArbolABB.java, MotoService.java, MotoController.javaProgramador 2Frontend — Vistas y diseño visualindex.html, lista-motos.html, detalle-moto.html, estadisticas.html, README.mdDirectorRevisión de código, aprobación de Pull Requests, coordinación general—
 
-## 👥 Equipo
-
-| Rol | Responsabilidad | Archivos |
-|---|---|---|
-| Programador 1 | Backend — Estructura de datos y lógica | `Moto.java`, `NodoABB.java`, `ArbolABB.java`, `MotoService.java`, `MotoController.java` |
-| Programador 2 | Frontend — Vistas y diseño visual | `index.html`, `lista-motos.html`, `detalle-moto.html`, `estadisticas.html`, `README.md` |
-| Director | Revisión de código, aprobación de Pull Requests, coordinación general | — |
-
----
-
-*SIRMOT &copy; 2025 — Universidad de Remington*
+SIRMOT © 2025 — Universidad de Remington
