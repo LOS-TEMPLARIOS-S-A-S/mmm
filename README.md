@@ -49,29 +49,11 @@ Un navegador web moderno (Chrome, Firefox, Edge)
 Conexión a internet para cargar Google Fonts, Bootstrap y Bootstrap Icons desde CDN
 
 
+
 🚀 Instalación y Ejecución
 1. Clonar el repositorio
 bashgit clone <url-del-repositorio>
 cd MotoMejorado
-2. Compilar el proyecto
-bash# Con Maven instalado globalmente
-mvn clean install
-
-# Con el wrapper incluido (Linux / Mac)
-./mvnw clean install
-
-# Con el wrapper incluido (Windows)
-.\mvnw.cmd clean install
-3. Ejecutar la aplicación
-bash# Con Maven
-mvn spring-boot:run
-
-# Con el wrapper (Linux / Mac)
-./mvnw spring-boot:run
-
-# Con el wrapper (Windows)
-.\mvnw.cmd spring-boot:run
-```
 
 ### 4. Acceder al sistema
 
@@ -359,7 +341,7 @@ Muestra en tiempo real el total de registros y la distribución por estado en 4 
 application.properties
 propertiesspring.application.name=Moto
 
-El puerto por defecto de Spring Boot es 8080. Para cambiarlo, agregar: server.port=XXXX
+El puerto por defecto de Spring Boot es 9090. Para cambiarlo, agregar: server.port=XXXX
 
 pom.xml — Dependencias principales
 xml<dependencies>
