@@ -75,9 +75,9 @@ mvn spring-boot:run
 
 ### 4. Acceder al sistema
 
-Abrir el navegador en: **http://localhost:8080/motos**
+Abrir el navegador en: **http://localhost:9090/motos**
 
-> El puerto por defecto es `8080`, configurado en `application.properties`.
+> El puerto por defecto es `9090`, configurado en `application.properties`.
 
 ---
 
