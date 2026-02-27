@@ -3,11 +3,7 @@ package co.edu.uniremington.kiarapuello.Moto.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Árbol Binario de Búsqueda (ABB) para gestionar motos.
- * Ordenado por placa de forma alfabética (insensible a mayúsculas).
- * Operaciones principales: insertar, buscar, eliminar, listar (inorden).
- */
+
 public class ArbolABB {
 
     private NodoABB raiz;

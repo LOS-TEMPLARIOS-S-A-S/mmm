@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIRMOT - Estadísticas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --azul-policial: #0d1b2a; --azul-medio: #1b3a5c; --dorado: #f0a500; --rojo: #c0392b; }
+        body { background-color: var(--azul-policial); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .navbar-custom { background: linear-gradient(90deg, #0a1628, #1b3a5c); border-bottom: 3px solid var(--dorado); }
+        .navbar-brand { font-weight: 800; color: var(--dorado) !important; letter-spacing: 2px; }
+        .nav-link { color: rgba(255,255,255,0.8) !important; }
+        .nav-link:hover { color: var(--dorado) !important; }
+
+        .stat-big {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        .stat-big .num { font-size: 3.5rem; font-weight: 900; }
+        .stat-big .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; }
+        .num-robadas { color: #e74c3c; }
+        .num-normales { color: #2ecc71; }
+        .num-recuperadas { color: #f39c12; }
+        .num-total { color: var(--dorado); }
+
+        .bar-container { background: rgba(255,255,255,0.06); border-radius: 8px; height: 20px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 8px; transition: width 1s ease; }
+
+        .section-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 24px;
+        }
+        .section-card h5 { color: var(--dorado); font-weight: 700; margin-bottom: 18px; }
+
+        .alert-robada-item {
+            background: rgba(192,57,43,0.1);
+            border: 1px solid rgba(192,57,43,0.3);
+            border-radius: 10px;
+            padding: 14px 16px;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .placa-code { font-family: monospace; font-weight: 700; font-size: 1rem; color: var(--dorado); }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/motos"><i class="bi bi-shield-fill me-2"></i>SIRMOT</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto gap-2">
+                <li class="nav-item"><a class="nav-link" href="/motos"><i class="bi bi-house me-1"></i>Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/motos/listar"><i class="bi bi-list-ul me-1"></i>Registros</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/motos/estadisticas"><i class="bi bi-bar-chart me-1"></i>Estadísticas</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h2 class="mb-4" style="color: var(--dorado); font-weight: 700;">
+        <i class="bi bi-bar-chart-fill me-2"></i>Panel de Estadísticas
+    </h2>
+
+    <!-- STATS GRANDES -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-big">
+                <div class="num num-total" th:text="${stats['total']}">0</div>
+                <div class="label"><i class="bi bi-database me-1"></i>Total Registros</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-big">
+                <div class="num num-robadas" th:text="${stats['robadas']}">0</div>
+                <div class="label"><i class="bi bi-exclamation-triangle me-1"></i>Motos Robadas</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-big">
+                <div class="num num-normales" th:text="${stats['normales']}">0</div>
+                <div class="label"><i class="bi bi-check-circle me-1"></i>Sin Robo</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-big">
+                <div class="num num-recuperadas" th:text="${stats['recuperadas']}">0</div>
+                <div class="label"><i class="bi bi-arrow-clockwise me-1"></i>Recuperadas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- BARRA DE DISTRIBUCIÓN -->
+        <div class="col-md-6">
+            <div class="section-card">
+                <h5><i class="bi bi-pie-chart me-2"></i>Distribución por Estado</h5>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-white-50 mb-1" style="font-size:0.82rem">
+                        <span>Robadas</span>
+                        <span th:text="${stats['total'] > 0 ? #numbers.formatInteger(stats['robadas'] * 100 / stats['total'], 0) + '%' : '0%'}"></span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="background:#c0392b"
+                             th:style="'background:#c0392b; width:' + (${stats['total'] > 0 ? stats['robadas'] * 100 / stats['total'] : 0}) + '%'"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-white-50 mb-1" style="font-size:0.82rem">
+                        <span>Normales</span>
+                        <span th:text="${stats['total'] > 0 ? #numbers.formatInteger(stats['normales'] * 100 / stats['total'], 0) + '%' : '0%'}"></span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill"
+                             th:style="'background:#27ae60; width:' + (${stats['total'] > 0 ? stats['normales'] * 100 / stats['total'] : 0}) + '%'"></div>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between text-white-50 mb-1" style="font-size:0.82rem">
+                        <span>Recuperadas</span>
+                        <span th:text="${stats['total'] > 0 ? #numbers.formatInteger(stats['recuperadas'] * 100 / stats['total'], 0) + '%' : '0%'}"></span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill"
+                             th:style="'background:#f39c12; width:' + (${stats['total'] > 0 ? stats['recuperadas'] * 100 / stats['total'] : 0}) + '%'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LISTA DE ROBADAS -->
+        <div class="col-md-6">
+            <div class="section-card">
+                <h5><i class="bi bi-exclamation-octagon me-2 text-danger"></i>Motos Robadas Activas</h5>
+
+                <div th:if="${#lists.isEmpty(robadas)}" class="text-center text-white-50 py-3">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size:2rem"></i>
+                    <p class="mt-2">No hay motos robadas registradas actualmente</p>
+                </div>
+
+                <div th:each="moto : ${robadas}" class="alert-robada-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="placa-code" th:text="${moto.placa}"></span>
+                            <small class="text-white-50 ms-2" th:text="${moto.marca + ' ' + moto.modelo}"></small>
+                            <div style="font-size:0.8rem; color:rgba(255,255,255,0.6)" class="mt-1">
+                                <i class="bi bi-person me-1"></i><span th:text="${moto.propietario}"></span>
+                                &nbsp;|&nbsp;
+                                <i class="bi bi-palette me-1"></i><span th:text="${moto.color}"></span>
+                            </div>
+                        </div>
+                        <small class="text-white-50" th:text="${moto.fechaReporte}"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <small class="text-white-50">SIRMOT &copy; 2025 - Uniremington</small>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

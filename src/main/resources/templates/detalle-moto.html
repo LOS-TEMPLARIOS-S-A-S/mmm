@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIRMOT - Detalle de Moto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --azul-policial: #0d1b2a; --azul-medio: #1b3a5c; --dorado: #f0a500; --rojo: #c0392b; }
+        body { background-color: var(--azul-policial); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+        .navbar-custom { background: linear-gradient(90deg, #0a1628, #1b3a5c); border-bottom: 3px solid var(--dorado); }
+        .navbar-brand { font-weight: 800; color: var(--dorado) !important; letter-spacing: 2px; }
+        .nav-link { color: rgba(255,255,255,0.8) !important; }
+        .nav-link:hover { color: var(--dorado) !important; }
+
+        /* Ficha principal */
+        .ficha-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        .ficha-header {
+            padding: 28px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ficha-header-robada   { background: linear-gradient(135deg, #7b1010, #c0392b); }
+        .ficha-header-normal   { background: linear-gradient(135deg, #145a32, #27ae60); }
+        .ficha-header-recuperada { background: linear-gradient(135deg, #5d4037, #ff8f00); }
+
+        .placa-grande {
+            font-family: monospace;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .estado-badge {
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .estado-badge-robada    { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.5); }
+        .estado-badge-normal    { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.5); }
+        .estado-badge-recuperada { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.5); }
+
+        .ficha-body { padding: 28px 32px; }
+
+        .dato-grupo { margin-bottom: 24px; }
+        .dato-etiqueta {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 4px;
+        }
+        .dato-valor {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .divider { border-color: rgba(255,255,255,0.08); margin: 8px 0 20px; }
+
+        .alerta-robada {
+            background: rgba(192,57,43,0.15);
+            border: 1px solid rgba(192,57,43,0.4);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: white;
+            margin-bottom: 20px;
+            animation: pulso 2s infinite;
+        }
+        @keyframes pulso {
+            0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+            50%      { box-shadow: 0 0 0 10px rgba(192,57,43,0); }
+        }
+
+        /* Botones acción */
+        .btn-accion {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* 404 */
+        .not-found {
+            text-align: center;
+            padding: 80px 20px;
+            color: rgba(255,255,255,0.3);
+        }
+        .not-found i { font-size: 4rem; margin-bottom: 16px; display: block; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/motos"><i class="bi bi-shield-fill me-2"></i>SIRMOT</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto gap-2">
+                <li class="nav-item"><a class="nav-link" href="/motos"><i class="bi bi-house me-1"></i>Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/motos/listar"><i class="bi bi-list-ul me-1"></i>Registros</a></li>
+                <li class="nav-item"><a class="nav-link" href="/motos/estadisticas"><i class="bi bi-bar-chart me-1"></i>Estadísticas</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4" style="max-width: 720px;">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb" style="background:none">
+            <li class="breadcrumb-item"><a href="/motos/listar" style="color:var(--dorado)">Registros</a></li>
+            <li class="breadcrumb-item active text-white-50">Detalle</li>
+        </ol>
+    </nav>
+
+    <!-- MOTO NO ENCONTRADA -->
+    <div th:if="${moto == null}" class="not-found">
+        <i class="bi bi-x-circle"></i>
+        <h4 class="text-white">Moto no encontrada</h4>
+        <p>No existe ningún registro con esa placa en el sistema.</p>
+        <a href="/motos/listar" class="btn btn-outline-warning mt-2">
+            <i class="bi bi-arrow-left me-2"></i>Volver al listado
+        </a>
+    </div>
+
+    <!-- FICHA DE MOTO -->
+    <div th:if="${moto != null}" class="ficha-card">
+
+        <!-- Alerta especial si está robada -->
+        <div th:if="${moto.estado == 'robada'}" class="alerta-robada mx-3 mt-3">
+            <i class="bi bi-exclamation-octagon-fill me-2"></i>
+            <strong>ALERTA DE ROBO ACTIVA</strong> — Esta moto figura como robada en el sistema.
+            Si la avistas, contacta a las autoridades.
+        </div>
+
+        <!-- Header con placa -->
+        <div class="ficha-header"
+             th:classappend="${moto.estado == 'robada'} ? 'ficha-header-robada' : (${moto.estado == 'recuperada'} ? 'ficha-header-recuperada' : 'ficha-header-normal')">
+            <div>
+                <div style="color:rgba(255,255,255,0.6); font-size:0.75rem; letter-spacing:3px; text-transform:uppercase; margin-bottom:4px">
+                    Placa
+                </div>
+                <div class="placa-grande" th:text="${moto.placa}">ABC123</div>
+            </div>
+            <span class="estado-badge"
+                  th:classappend="${moto.estado == 'robada'} ? 'estado-badge-robada' : (${moto.estado == 'recuperada'} ? 'estado-badge-recuperada' : 'estado-badge-normal')"
+                  th:text="${moto.estado.toUpperCase()}">
+            </span>
+        </div>
+
+        <!-- Cuerpo de la ficha -->
+        <div class="ficha-body">
+            <div class="row">
+                <div class="col-6 dato-grupo">
+                    <div class="dato-etiqueta">Marca</div>
+                    <div class="dato-valor" th:text="${moto.marca}">—</div>
+                </div>
+                <div class="col-6 dato-grupo">
+                    <div class="dato-etiqueta">Modelo</div>
+                    <div class="dato-valor" th:text="${moto.modelo}">—</div>
+                </div>
+                <div class="col-6 dato-grupo">
+                    <div class="dato-etiqueta">Color</div>
+                    <div class="dato-valor" th:text="${moto.color}">—</div>
+                </div>
+                <div class="col-6 dato-grupo">
+                    <div class="dato-etiqueta">Año</div>
+                    <div class="dato-valor" th:text="${moto.anio}">—</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="row">
+                <div class="col-md-6 dato-grupo">
+                    <div class="dato-etiqueta">Propietario</div>
+                    <div class="dato-valor" th:text="${moto.propietario}">—</div>
+                </div>
+                <div class="col-md-6 dato-grupo">
+                    <div class="dato-etiqueta">Cédula</div>
+                    <div class="dato-valor" th:text="${moto.cedulaPropietario}">—</div>
+                </div>
+                <div class="col-12 dato-grupo">
+                    <div class="dato-etiqueta">Fecha de Reporte</div>
+                    <div class="dato-valor" th:text="${moto.fechaReporte}">—</div>
+                </div>
+                <div class="col-12 dato-grupo" th:if="${moto.descripcion != null and !#strings.isEmpty(moto.descripcion)}">
+                    <div class="dato-etiqueta">Descripción / Señas</div>
+                    <div class="dato-valor" style="font-size:0.95rem; font-weight:400; color:rgba(255,255,255,0.8)"
+                         th:text="${moto.descripcion}">—</div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- ACCIONES -->
+            <div class="d-flex flex-wrap gap-2">
+                <!-- Marcar robada -->
+                <form th:if="${moto.estado != 'robada'}" th:action="@{/motos/marcarRobada}" method="post">
+                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                    <button class="btn btn-danger btn-accion"
+                            onclick="return confirm('¿Marcar esta moto como ROBADA?')">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Marcar como Robada
+                    </button>
+                </form>
+                <!-- Marcar recuperada -->
+                <form th:if="${moto.estado == 'robada'}" th:action="@{/motos/marcarRecuperada}" method="post">
+                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                    <button class="btn btn-warning btn-accion"
+                            onclick="return confirm('¿Marcar esta moto como recuperada?')">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Marcar como Recuperada
+                    </button>
+                </form>
+                <!-- Eliminar -->
+                <form th:action="@{/motos/eliminar}" method="post">
+                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                    <button class="btn btn-outline-danger btn-accion"
+                            onclick="return confirm('¿Eliminar este registro permanentemente?')">
+                        <i class="bi bi-trash me-2"></i>Eliminar Registro
+                    </button>
+                </form>
+                <!-- Volver -->
+                <a href="/motos/listar" class="btn btn-outline-secondary btn-accion ms-auto">
+                    <i class="bi bi-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <small class="text-white-50">SIRMOT &copy; 2025 - Uniremington</small>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
