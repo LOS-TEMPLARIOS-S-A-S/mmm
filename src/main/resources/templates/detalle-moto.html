@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIRMOT - Detalle de Moto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --grad: linear-gradient(135deg, #e8d5ff 0%, #c9d8ff 35%, #b8eaff 65%, #d4f0ff 100%);
+            --sidebar-w: 230px;
+            --glass: rgba(255,255,255,0.45);
+            --glass-border: rgba(255,255,255,0.7);
+            --glass-shadow: 0 8px 32px rgba(120,80,200,0.12);
+            --accent: #7B5CE7;
+            --accent2: #E879C8;
+            --ink: #1E1B3A;
+            --ink-muted: #7A6F9B;
+            --ink-light: #B8B0D4;
+            --danger: #F04848;
+            --danger-d: #B91C1C;
+            --success: #22C55E;
+            --success-d: #15803D;
+            --warning: #F59E0B;
+            --warning-d: #B45309;
+            --r: 18px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--grad); min-height:100vh; color:var(--ink); display:flex; }
+        body::before, body::after { content:''; position:fixed; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0; }
+        body::before { width:500px; height:500px; background:rgba(180,120,255,0.25); top:-100px; left:-100px; }
+        body::after  { width:600px; height:400px; background:rgba(56,189,248,0.2); bottom:-80px; right:-80px; }
+
+        .sidebar { width:var(--sidebar-w); min-height:100vh; background:rgba(255,255,255,0.35); backdrop-filter:blur(24px); border-right:1px solid var(--glass-border); padding:28px 16px; position:fixed; top:0; left:0; bottom:0; z-index:50; display:flex; flex-direction:column; }
+        .sidebar-logo { display:flex; align-items:center; gap:10px; padding:6px 12px; margin-bottom:32px; }
+        .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; box-shadow:0 4px 14px rgba(123,92,231,0.4); }
+        .logo-name { font-weight:800; font-size:1.1rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:1px; }
+        .logo-sub { font-size:0.58rem; color:var(--ink-muted); letter-spacing:2px; text-transform:uppercase; display:block; }
+        .nav-section-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:2px; color:var(--ink-light); font-weight:600; padding:0 12px; margin-bottom:8px; margin-top:20px; }
+        .nav-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; font-size:0.88rem; font-weight:500; color:var(--ink-muted); text-decoration:none; transition:all .2s; margin-bottom:3px; }
+        .nav-item i { font-size:16px; width:20px; text-align:center; }
+        .nav-item:hover { background:rgba(123,92,231,0.1); color:var(--accent); }
+        .nav-item.active { background:linear-gradient(135deg,rgba(123,92,231,0.18),rgba(232,121,200,0.12)); color:var(--accent); font-weight:600; box-shadow:inset 0 0 0 1px rgba(123,92,231,0.2); }
+        .sidebar-footer { margin-top:auto; padding:14px 12px; background:rgba(123,92,231,0.08); border-radius:14px; font-size:0.75rem; color:var(--ink-muted); text-align:center; }
+
+        .main { margin-left:var(--sidebar-w); flex:1; min-height:100vh; padding:28px 28px 40px; position:relative; z-index:1; }
+        .glass-card { background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:var(--r); box-shadow:var(--glass-shadow); }
+
+        .breadcrumb { background:none; padding:0; margin-bottom:24px; }
+        .breadcrumb-item a { color:var(--accent); font-size:0.84rem; text-decoration:none; font-weight:500; }
+        .breadcrumb-item a:hover { text-decoration:underline; }
+        .breadcrumb-item.active { color:var(--ink-muted); font-size:0.84rem; }
+        .breadcrumb-item + .breadcrumb-item::before { color:var(--ink-light); }
+
+        /* FICHA */
+        .ficha { max-width: 720px; }
+        .ficha-banner {
+            padding: 28px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: var(--r) var(--r) 0 0;
+        }
+        .banner-robada    { background: linear-gradient(135deg, rgba(240,72,72,0.15), rgba(232,121,200,0.1)); border-bottom: 1px solid rgba(240,72,72,0.2); }
+        .banner-normal    { background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(56,189,248,0.1)); border-bottom: 1px solid rgba(34,197,94,0.2); }
+        .banner-recuperada { background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(251,191,36,0.08)); border-bottom: 1px solid rgba(245,158,11,0.2); }
+
+        .placa-label { font-size:0.66rem; text-transform:uppercase; letter-spacing:2px; color:var(--ink-muted); margin-bottom:5px; font-weight:600; }
+        .placa-display { font-family:monospace; font-weight:900; font-size:2.5rem; letter-spacing:7px; line-height:1; }
+        .pd-robada    { color: #B91C1C; }
+        .pd-normal    { color: #15803D; }
+        .pd-recuperada { color: #B45309; }
+
+        .pill { font-size:0.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:5px 14px; border-radius:20px; }
+        .p-danger  { background:rgba(240,72,72,0.15);  color:#B91C1C; border:1px solid rgba(240,72,72,0.3); }
+        .p-success { background:rgba(34,197,94,0.15);  color:#15803D; border:1px solid rgba(34,197,94,0.3); }
+        .p-warning { background:rgba(245,158,11,0.15); color:#B45309; border:1px solid rgba(245,158,11,0.3); }
+
+        .alerta-robo {
+            margin:20px 28px 0;
+            background:rgba(240,72,72,0.1);
+            border:1.5px solid rgba(240,72,72,0.3);
+            border-radius:12px; padding:13px 16px;
+            font-size:0.86rem; color:#B91C1C; font-weight:600;
+            display:flex; align-items:center; gap:8px;
+            animation:pulse-r 2s infinite;
+        }
+        @keyframes pulse-r {
+            0%,100% { box-shadow:0 0 0 0 rgba(240,72,72,0.15); }
+            50%      { box-shadow:0 0 0 10px rgba(240,72,72,0); }
+        }
+
+        .ficha-body { padding:24px 30px; border-radius:0 0 var(--r) var(--r); }
+        .dato-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+        .dato-lbl { font-size:0.68rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--ink-muted); margin-bottom:4px; font-weight:600; }
+        .dato-val { font-size:1rem; font-weight:600; color:var(--ink); }
+        .dato-full { grid-column:span 2; }
+
+        .divider { border:none; border-top:1px solid rgba(255,255,255,0.5); margin:20px 0; }
+
+        .actions { display:flex; flex-wrap:wrap; gap:10px; }
+        .btn-action {
+            padding:9px 18px; border-radius:11px; font-size:0.86rem; font-weight:700;
+            border:none; cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+            text-decoration:none; transition:all .2s;
+            font-family:'Plus Jakarta Sans',sans-serif;
+        }
+        .ba-robada { background:rgba(240,72,72,0.12); color:#B91C1C; border:1.5px solid rgba(240,72,72,0.25); }
+        .ba-recup  { background:rgba(245,158,11,0.12); color:#B45309; border:1.5px solid rgba(245,158,11,0.25); }
+        .ba-del    { background:rgba(255,255,255,0.4); color:var(--ink-muted); border:1.5px solid rgba(255,255,255,0.6); }
+        .ba-back   { background:linear-gradient(135deg,rgba(123,92,231,0.15),rgba(232,121,200,0.1)); color:var(--accent); border:1.5px solid rgba(123,92,231,0.2); margin-left:auto; }
+        .btn-action:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.1); }
+
+        .not-found { text-align:center; padding:80px 24px; max-width:500px; }
+        .nf-icon { font-size:3.5rem; opacity:0.2; margin-bottom:16px; }
+
+        @media(max-width:768px){ .sidebar{display:none;} .main{margin-left:0;padding:20px 16px;} }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-icon"><i class="bi bi-shield-check"></i></div>
+        <div><span class="logo-name">SIRMOT</span><span class="logo-sub">Sistema Policial</span></div>
+    </div>
+    <span class="nav-section-label">Menú</span>
+    <a class="nav-item" href="/motos"><i class="bi bi-house-door-fill"></i> Inicio</a>
+    <a class="nav-item active" href="/motos/listar"><i class="bi bi-list-ul"></i> Ver Registros</a>
+    <a class="nav-item" href="/motos/estadisticas"><i class="bi bi-bar-chart-fill"></i> Estadísticas</a>
+    <span class="nav-section-label">Acciones</span>
+    <a class="nav-item" href="/motos"><i class="bi bi-shield-plus"></i> Registrar Moto</a>
+    <a class="nav-item" href="/motos/listar?filtro=robada"><i class="bi bi-exclamation-triangle-fill"></i> Robadas</a>
+    <div class="sidebar-footer"><i class="bi bi-building me-1"></i> Uniremington &copy; 2025</div>
+</aside>
+
+<main class="main">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/motos/listar">Registros</a></li>
+            <li class="breadcrumb-item active">Detalle de Moto</li>
+        </ol>
+    </nav>
+
+    <!-- NO ENCONTRADA -->
+    <div th:if="${moto == null}" class="glass-card not-found">
+        <div class="nf-icon"><i class="bi bi-x-circle"></i></div>
+        <h4 style="font-weight:800;margin-bottom:8px">Moto no encontrada</h4>
+        <p style="color:var(--ink-muted);font-size:0.9rem;margin-bottom:20px">No existe ningún registro con esa placa.</p>
+        <a href="/motos/listar" class="btn-action ba-back"><i class="bi bi-arrow-left"></i>Volver al listado</a>
+    </div>
+
+    <!-- FICHA -->
+    <div th:if="${moto != null}" class="glass-card ficha">
+
+        <div th:if="${moto.estado == 'robada'}" class="alerta-robo">
+            <i class="bi bi-exclamation-octagon-fill"></i>
+            <span><strong>ALERTA ACTIVA —</strong> Esta moto figura como robada. Si la avistas, contacta a las autoridades.</span>
+        </div>
+
+        <div class="ficha-banner"
+             th:classappend="${moto.estado == 'robada'} ? 'banner-robada' : (${moto.estado == 'recuperada'} ? 'banner-recuperada' : 'banner-normal')">
+            <div>
+                <div class="placa-label">Número de Placa</div>
+                <div class="placa-display"
+                     th:classappend="${moto.estado == 'robada'} ? 'pd-robada' : (${moto.estado == 'recuperada'} ? 'pd-recuperada' : 'pd-normal')"
+                     th:text="${moto.placa}">ABC123</div>
+            </div>
+            <span class="pill"
+                  th:classappend="${moto.estado == 'robada'} ? 'p-danger' : (${moto.estado == 'recuperada'} ? 'p-warning' : 'p-success')"
+                  th:text="${moto.estado.toUpperCase()}"></span>
+        </div>
+
+        <div class="ficha-body">
+            <div class="dato-grid">
+                <div><div class="dato-lbl">Marca</div><div class="dato-val" th:text="${moto.marca}">—</div></div>
+                <div><div class="dato-lbl">Modelo</div><div class="dato-val" th:text="${moto.modelo}">—</div></div>
+                <div><div class="dato-lbl">Color</div><div class="dato-val" th:text="${moto.color}">—</div></div>
+                <div><div class="dato-lbl">Año</div><div class="dato-val" th:text="${moto.anio}">—</div></div>
+            </div>
+            <hr class="divider">
+            <div class="dato-grid">
+                <div><div class="dato-lbl">Propietario</div><div class="dato-val" th:text="${moto.propietario}">—</div></div>
+                <div><div class="dato-lbl">Cédula</div><div class="dato-val" th:text="${moto.cedulaPropietario}">—</div></div>
+                <div><div class="dato-lbl">Fecha de Reporte</div><div class="dato-val" th:text="${moto.fechaReporte}">—</div></div>
+                <div th:if="${moto.descripcion != null and !#strings.isEmpty(moto.descripcion)}" class="dato-full">
+                    <div class="dato-lbl">Descripción / Señas</div>
+                    <div class="dato-val" style="font-weight:400;font-size:0.92rem;color:var(--ink-muted)" th:text="${moto.descripcion}">—</div>
+                </div>
+            </div>
+            <hr class="divider">
+
+            <div class="actions">
+                <form th:if="${moto.estado != 'robada'}" th:action="@{/motos/marcarRobada}" method="post" class="d-inline">
+                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                    <button class="btn-action ba-robada" onclick="return confirm('¿Marcar como ROBADA?')">
+                        <i class="bi bi-exclamation-triangle"></i>Marcar como Robada
+                    </button>
+                </form>
+                <form th:if="${moto.estado == 'robada'}" th:action="@{/motos/marcarRecuperada}" method="post" class="d-inline">
+                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                    <button class="btn-action ba-recup" onclick="return confirm('¿Marcar como recuperada?')">
+                        <i class="bi bi-arrow-clockwise"></i>Marcar como Recuperada
+                    </button>
+                </form>
+                <form th:action="@{/motos/eliminar}" method="post" class="d-inline">
+                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                    <button class="btn-action ba-del" onclick="return confirm('¿Eliminar permanentemente?')">
+                        <i class="bi bi-trash"></i>Eliminar
+                    </button>
+                </form>
+                <a href="/motos/listar" class="btn-action ba-back">
+                    <i class="bi bi-arrow-left"></i>Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIRMOT - Listado de Registros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --grad: linear-gradient(135deg, #e8d5ff 0%, #c9d8ff 35%, #b8eaff 65%, #d4f0ff 100%);
+            --sidebar-w: 230px;
+            --glass: rgba(255,255,255,0.45);
+            --glass-border: rgba(255,255,255,0.7);
+            --glass-shadow: 0 8px 32px rgba(120,80,200,0.12);
+            --accent: #7B5CE7;
+            --accent2: #E879C8;
+            --accent3: #38BDF8;
+            --ink: #1E1B3A;
+            --ink-muted: #7A6F9B;
+            --ink-light: #B8B0D4;
+            --danger: #F04848;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --r: 18px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--grad); min-height: 100vh;
+            color: var(--ink); display: flex;
+        }
+        body::before, body::after {
+            content:''; position:fixed; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0;
+        }
+        body::before { width:500px; height:500px; background:rgba(180,120,255,0.25); top:-100px; left:-100px; }
+        body::after  { width:600px; height:400px; background:rgba(56,189,248,0.2); bottom:-80px; right:-80px; }
+
+        /* SIDEBAR */
+        .sidebar { width:var(--sidebar-w); min-height:100vh; background:rgba(255,255,255,0.35); backdrop-filter:blur(24px); border-right:1px solid var(--glass-border); padding:28px 16px; position:fixed; top:0; left:0; bottom:0; z-index:50; display:flex; flex-direction:column; }
+        .sidebar-logo { display:flex; align-items:center; gap:10px; padding:6px 12px; margin-bottom:32px; }
+        .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; box-shadow:0 4px 14px rgba(123,92,231,0.4); }
+        .logo-name { font-weight:800; font-size:1.1rem; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:1px; }
+        .logo-sub { font-size:0.58rem; color:var(--ink-muted); letter-spacing:2px; text-transform:uppercase; display:block; }
+        .nav-section-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:2px; color:var(--ink-light); font-weight:600; padding:0 12px; margin-bottom:8px; margin-top:20px; }
+        .nav-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; font-size:0.88rem; font-weight:500; color:var(--ink-muted); text-decoration:none; transition:all .2s; margin-bottom:3px; }
+        .nav-item i { font-size:16px; width:20px; text-align:center; }
+        .nav-item:hover { background:rgba(123,92,231,0.1); color:var(--accent); }
+        .nav-item.active { background:linear-gradient(135deg,rgba(123,92,231,0.18),rgba(232,121,200,0.12)); color:var(--accent); font-weight:600; box-shadow:inset 0 0 0 1px rgba(123,92,231,0.2); }
+        .badge-count { margin-left:auto; background:var(--accent); color:white; font-size:0.64rem; font-weight:700; padding:2px 7px; border-radius:20px; }
+        .sidebar-footer { margin-top:auto; padding:14px 12px; background:rgba(123,92,231,0.08); border-radius:14px; font-size:0.75rem; color:var(--ink-muted); text-align:center; }
+
+        /* MAIN */
+        .main { margin-left:var(--sidebar-w); flex:1; min-height:100vh; padding:28px 28px 40px; position:relative; z-index:1; }
+        .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+        .page-title { font-weight:800; font-size:1.5rem; color:var(--ink); }
+        .page-title span { color:var(--accent); }
+        .btn-new {
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            color:white; border:none; border-radius:12px; padding:9px 18px;
+            font-size:0.86rem; font-weight:700; cursor:pointer; text-decoration:none;
+            display:inline-flex; align-items:center; gap:6px; transition:all .2s;
+            box-shadow:0 4px 16px rgba(123,92,231,0.35);
+            font-family:'Plus Jakarta Sans',sans-serif;
+        }
+        .btn-new:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(123,92,231,0.45); color:white; }
+
+        /* GLASS */
+        .glass-card { background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:var(--r); box-shadow:var(--glass-shadow); }
+
+        /* FILTERS */
+        .filter-strip { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+        .filter-label { font-size:0.74rem; color:var(--ink-muted); text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+        .filter-btn {
+            padding:5px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;
+            text-decoration:none; border:1.5px solid rgba(255,255,255,0.7);
+            color:var(--ink-muted); background:rgba(255,255,255,0.4);
+            backdrop-filter:blur(8px); transition:all .15s;
+        }
+        .filter-btn:hover { background:rgba(123,92,231,0.15); color:var(--accent); border-color:rgba(123,92,231,0.3); }
+        .filter-btn.f-robada:hover  { background:rgba(240,72,72,0.12);  color:#B91C1C; border-color:rgba(240,72,72,0.3); }
+        .filter-btn.f-normal:hover  { background:rgba(34,197,94,0.12);  color:#15803D; border-color:rgba(34,197,94,0.3); }
+        .filter-btn.f-recup:hover   { background:rgba(245,158,11,0.12); color:#B45309; border-color:rgba(245,158,11,0.3); }
+        .count-tag { margin-left:auto; font-size:0.8rem; color:var(--ink-muted); background:rgba(255,255,255,0.5); border:1px solid var(--glass-border); border-radius:20px; padding:4px 14px; backdrop-filter:blur(8px); }
+
+        /* TABLE */
+        .table-wrap { overflow:hidden; }
+        .table { margin:0; }
+        .table thead th {
+            background:rgba(255,255,255,0.3);
+            color:var(--ink-muted); font-size:0.71rem; text-transform:uppercase;
+            letter-spacing:1px; font-weight:700;
+            border-bottom:1px solid rgba(255,255,255,0.5); border-top:none;
+            padding:13px 16px;
+        }
+        .table tbody td { border-color:rgba(255,255,255,0.35); color:var(--ink); vertical-align:middle; padding:12px 16px; font-size:0.88rem; }
+        .table tbody tr { transition:background .1s; }
+        .table tbody tr:hover { background:rgba(123,92,231,0.04); }
+        .row-robada td:first-child { border-left:3px solid var(--danger); }
+        .row-normal td:first-child { border-left:3px solid var(--success); }
+        .row-recup  td:first-child { border-left:3px solid var(--warning); }
+
+        .placa-badge {
+            font-family:monospace; font-weight:800; font-size:0.88rem; letter-spacing:2px;
+            background:rgba(123,92,231,0.1); border:1px solid rgba(123,92,231,0.2);
+            border-radius:7px; padding:3px 9px; color:var(--accent);
+        }
+        .cell-sub { font-size:0.76rem; color:var(--ink-muted); display:block; margin-top:1px; }
+
+        .pill { font-size:0.65rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+        .p-danger  { background:rgba(240,72,72,0.12);  color:#B91C1C; border:1px solid rgba(240,72,72,0.25); }
+        .p-success { background:rgba(34,197,94,0.12);  color:#15803D; border:1px solid rgba(34,197,94,0.25); }
+        .p-warning { background:rgba(245,158,11,0.12); color:#B45309; border:1px solid rgba(245,158,11,0.25); }
+
+        .btn-act { width:30px; height:30px; border-radius:8px; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:12px; transition:all .15s; }
+        .btn-act-d { background:rgba(240,72,72,0.12); color:#B91C1C; }
+        .btn-act-w { background:rgba(245,158,11,0.12); color:#B45309; }
+        .btn-act-g { background:rgba(123,92,231,0.08); color:var(--ink-muted); }
+        .btn-act:hover { transform:scale(1.12); }
+
+        .empty-state { text-align:center; padding:60px 20px; color:var(--ink-muted); }
+        .empty-icon { font-size:3rem; opacity:0.25; margin-bottom:12px; }
+
+        .flash { border-radius:12px; border:1.5px solid; padding:11px 16px; font-size:0.87rem; font-weight:500; margin-bottom:20px; display:flex; align-items:center; gap:8px; backdrop-filter:blur(12px); }
+        .flash-success { background:rgba(34,197,94,0.1);  border-color:rgba(34,197,94,0.3);  color:#15803D; }
+        .flash-danger  { background:rgba(240,72,72,0.1);  border-color:rgba(240,72,72,0.3);  color:#B91C1C; }
+        .flash-warning { background:rgba(245,158,11,0.1); border-color:rgba(245,158,11,0.3); color:#B45309; }
+        .flash-info    { background:rgba(123,92,231,0.1); border-color:rgba(123,92,231,0.3); color:var(--accent); }
+
+        @media(max-width:768px){ .sidebar{display:none;} .main{margin-left:0;padding:20px 16px;} }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-icon"><i class="bi bi-shield-check"></i></div>
+        <div><span class="logo-name">SIRMOT</span><span class="logo-sub">Sistema Policial</span></div>
+    </div>
+    <span class="nav-section-label">Menú</span>
+    <a class="nav-item" href="/motos"><i class="bi bi-house-door-fill"></i> Inicio</a>
+    <a class="nav-item active" href="/motos/listar"><i class="bi bi-list-ul"></i> Ver Registros</a>
+    <a class="nav-item" href="/motos/estadisticas"><i class="bi bi-bar-chart-fill"></i> Estadísticas</a>
+    <span class="nav-section-label">Acciones</span>
+    <a class="nav-item" href="/motos"><i class="bi bi-shield-plus"></i> Registrar Moto</a>
+    <a class="nav-item" href="/motos/listar?filtro=robada"><i class="bi bi-exclamation-triangle-fill"></i> Robadas</a>
+    <div class="sidebar-footer"><i class="bi bi-building me-1"></i> Uniremington &copy; 2025</div>
+</aside>
+
+<main class="main">
+    <div class="topbar">
+        <div>
+            <div class="page-title">Ver <span>Registros</span></div>
+            <div style="font-size:0.8rem;color:var(--ink-muted);margin-top:2px">Todos los vehículos registrados</div>
+        </div>
+        <a href="/motos" class="btn-new"><i class="bi bi-plus"></i>Nuevo Registro</a>
+    </div>
+
+    <div th:if="${mensaje}" class="flash"
+         th:classappend="${tipoMensaje == 'success'} ? 'flash-success' : (${tipoMensaje == 'danger'} ? 'flash-danger' : (${tipoMensaje == 'warning'} ? 'flash-warning' : 'flash-info'))">
+        <i class="bi bi-info-circle"></i><span th:text="${mensaje}"></span>
+    </div>
+
+    <div class="filter-strip">
+        <span class="filter-label"><i class="bi bi-funnel me-1"></i>Filtrar</span>
+        <a href="/motos/listar" class="filter-btn">Todos</a>
+        <a href="/motos/listar?filtro=robada"     class="filter-btn f-robada"><i class="bi bi-exclamation-triangle me-1"></i>Robadas</a>
+        <a href="/motos/listar?filtro=normal"     class="filter-btn f-normal"><i class="bi bi-check-circle me-1"></i>Normales</a>
+        <a href="/motos/listar?filtro=recuperada" class="filter-btn f-recup"><i class="bi bi-arrow-clockwise me-1"></i>Recuperadas</a>
+        <span class="count-tag"><i class="bi bi-list me-1"></i><span th:text="${#lists.size(motos)}">0</span> registros</span>
+    </div>
+
+    <div class="glass-card table-wrap">
+        <div th:if="${#lists.isEmpty(motos)}" class="empty-state">
+            <div class="empty-icon"><i class="bi bi-inbox"></i></div>
+            <p style="margin-bottom:14px">No hay registros en el sistema</p>
+            <a href="/motos" class="btn-new">Agregar el primero</a>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(motos)}" class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Placa</th><th>Vehículo</th><th>Color / Año</th>
+                        <th>Propietario</th><th>Reporte</th><th>Estado</th><th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="moto : ${motos}"
+                        th:classappend="${moto.estado == 'robada'} ? 'row-robada' : (${moto.estado == 'recuperada'} ? 'row-recup' : 'row-normal')">
+                        <td><span class="placa-badge" th:text="${moto.placa}"></span></td>
+                        <td>
+                            <span th:text="${moto.marca}"></span>
+                            <span class="cell-sub" th:text="${moto.modelo}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${moto.color}"></span>
+                            <span class="cell-sub" th:text="${moto.anio}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${moto.propietario}"></span>
+                            <span class="cell-sub" th:text="${moto.cedulaPropietario}"></span>
+                        </td>
+                        <td><small th:text="${moto.fechaReporte}" style="color:var(--ink-muted)"></small></td>
+                        <td>
+                            <span th:if="${moto.estado == 'robada'}"    class="pill p-danger"><i class="bi bi-exclamation-triangle me-1"></i>ROBADA</span>
+                            <span th:if="${moto.estado == 'normal'}"    class="pill p-success"><i class="bi bi-check-circle me-1"></i>NORMAL</span>
+                            <span th:if="${moto.estado == 'recuperada'}" class="pill p-warning"><i class="bi bi-arrow-clockwise me-1"></i>RECUPERADA</span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <form th:if="${moto.estado != 'robada'}" th:action="@{/motos/marcarRobada}" method="post" class="d-inline">
+                                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                                    <button class="btn-act btn-act-d" title="Marcar robada" onclick="return confirm('¿Marcar como ROBADA?')"><i class="bi bi-exclamation-triangle"></i></button>
+                                </form>
+                                <form th:if="${moto.estado == 'robada'}" th:action="@{/motos/marcarRecuperada}" method="post" class="d-inline">
+                                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                                    <button class="btn-act btn-act-w" title="Recuperada" onclick="return confirm('¿Marcar como recuperada?')"><i class="bi bi-arrow-clockwise"></i></button>
+                                </form>
+                                <form th:action="@{/motos/eliminar}" method="post" class="d-inline">
+                                    <input type="hidden" name="placa" th:value="${moto.placa}">
+                                    <button class="btn-act btn-act-g" title="Eliminar" onclick="return confirm('¿Eliminar este registro?')"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
