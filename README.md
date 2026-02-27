@@ -359,7 +359,7 @@ Muestra en tiempo real el total de registros y la distribución por estado en 4 
 application.properties
 propertiesspring.application.name=Moto
 
-El puerto por defecto de Spring Boot es 8080. Para cambiarlo, agregar: server.port=XXXX
+El puerto por defecto de Spring Boot es 90900. Para cambiarlo, agregar: server.port=XXXX
 
 pom.xml — Dependencias principales
 xml<dependencies>
